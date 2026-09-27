@@ -28,13 +28,15 @@ Usage (PowerShell):
 
 from datetime import timedelta
 
+import json
+
 import duckdb
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from load import DB_PATH, ROOT
-from ml_utils import (MODEL_KINDS, compare_models, evaluate, fit, predict,
+from ml_utils import (MODEL_KINDS, compare_models, evaluate, fit, logistic_model, plural, predict,
                       print_calibration, save_metrics, save_table)
 
 DEAD_AFTER_DAYS = 200  # a deal still open this long after creation counts as lost
@@ -42,12 +44,27 @@ BACKTEST_DAYS = 90     # the backtest pretends the model was built this many day
 TEST_COHORT_DAYS = 90  # backtest tests on deals created during this many days
 
 CATEGORICAL = ["deal_type", "source", "product_tier", "industry", "size_band", "region", "stage"]
-NUMERIC = ["stage_order", "amount_log", "amount_missing", "probability_pct", "age_log",
+# The rep's own probability (probability_pct) is deliberately NOT a feature: the model
+# must stand on its own evidence, so "rep says X%, model says Y%" is a fair comparison.
+NUMERIC = ["stage_order", "amount_log", "amount_missing", "age_log",
            "days_in_stage_log", "days_to_close", "is_close_date_past", "close_date_pushes",
            "activities_7d", "activities_30d", "buyer_responses_30d", "responses_total_log",
            "meetings_total", "days_since_activity", "days_since_response",
            "rep_win_rate", "rep_closed_log"]
 FEATURES = CATEGORICAL + NUMERIC
+
+# Features grouped into reasons a salesperson understands (used to explain each score)
+REASON_GROUPS = {
+    "Stage": ["stage", "stage_order"],
+    "Buyer engagement": ["buyer_responses_30d", "responses_total_log", "meetings_total", "days_since_response"],
+    "Rep activity": ["activities_7d", "activities_30d", "days_since_activity"],
+    "Deal age": ["age_log", "days_in_stage_log"],
+    "Close date": ["days_to_close", "is_close_date_past", "close_date_pushes"],
+    "Deal size": ["amount_log", "amount_missing", "product_tier"],
+    "Company profile": ["industry", "size_band", "region"],
+    "Lead source": ["source", "deal_type"],
+    "Owner's track record": ["rep_win_rate", "rep_closed_log"],
+}
 
 
 def load_snapshots(con):
@@ -113,16 +130,71 @@ def add_deal_weights(rows):
     return rows
 
 
+def reason_detail(group, r):
+    """Plain-English facts behind one reason group, for one deal (numbers from the snapshot)."""
+    ago = lambda v: "never" if pd.isna(v) else f"{plural(v, 'day')} ago"
+    if group == "Stage":
+        return f"in the {r.stage} stage"
+    if group == "Buyer engagement":
+        if r.buyer_responses_total == 0:
+            return f"no buyer response in the {plural(r.days_since_created, 'day')} since the deal was created"
+        return (f"{plural(r.buyer_responses_30d, 'buyer response')} in the last 30 days "
+                f"(last one {ago(r.days_since_buyer_response)}), {plural(r.meetings_total, 'meeting')} held")
+    if group == "Rep activity":
+        return (f"{plural(r.activities_30d, 'activity', 'activities')} in the last 30 days "
+                f"(last one {ago(r.days_since_last_activity)})")
+    if group == "Deal age":
+        return f"open for {plural(r.days_since_created, 'day')}, {int(r.days_in_stage)} of them in {r.stage}"
+    if group == "Close date":
+        moved = (f"close date moved {plural(r.close_date_pushes, 'time')}" if r.close_date_pushes
+                 else "close date never moved")
+        when = ("the close date has passed" if r.is_close_date_past
+                else f"expected to close in {plural(r.days_to_expected_close, 'day')}")
+        return f"{moved}, {when}"
+    if group == "Deal size":
+        return f"{r.product_tier} deal" + (f" worth ${r.amount_usd:,.0f}" if pd.notna(r.amount_usd) else " with no amount entered")
+    if group == "Company profile":
+        return f"{r.industry} industry, {r.size_band} company in {r.region}"
+    if group == "Lead source":
+        return ("expansion deal with an existing customer" if r.deal_type == "Expansion"
+                else f"new business from a {r.source} lead")
+    return f"the owner has won {int(r.rep_won_deals)} of {plural(r.rep_closed_deals, 'closed deal')}"
+
+
+def top_reasons(explainer, train, df, n=3):
+    """For each deal: the n reason groups that move its win probability most.
+
+    A logistic model adds up one number per feature (in log-odds). Comparing a
+    deal with the average training deal and summing those numbers per group
+    shows what raises or lowers this deal's probability, and by how much.
+    """
+    prep, lr = explainer.named_steps["prep"], explainer.named_steps["model"]
+    names = prep.get_feature_names_out()
+    columns = {g: [i for i, name in enumerate(names)
+                   if any(name == f"num__{f}" or name.startswith(f"cat__{f}_") for f in feats)]
+               for g, feats in REASON_GROUPS.items()}
+    center = np.average(prep.transform(train[FEATURES]), axis=0, weights=train["weight"])
+    contrib = (prep.transform(df[FEATURES]) - center) * lr.coef_[0]
+    reasons = []
+    for i, row in enumerate(df.itertuples()):
+        per_group = {g: float(contrib[i, cols].sum()) for g, cols in columns.items()}
+        strongest = sorted(per_group.items(), key=lambda kv: -abs(kv[1]))[:n]
+        reasons.append([{"factor": g, "effect": "raises" if v > 0 else "lowers",
+                         "strength": round(abs(v), 2), "detail": reason_detail(g, row)}
+                        for g, v in strongest])
+    return reasons
+
+
 def risk_flags(row, stuck_after):
     flags = []
     if row.is_close_date_past:
         flags.append("close date has passed")
     if row.close_date_pushes >= 2:
-        flags.append(f"close date pushed {row.close_date_pushes}x")
+        flags.append(f"close date moved {plural(row.close_date_pushes, 'time')}")
     if row.days_since_response >= 21:
-        flags.append(f"no buyer response in {int(row.days_since_response)}+ days")
+        flags.append(f"no buyer response in {int(row.days_since_response)}+ days")  # always 21+
     if row.days_in_stage > stuck_after.get(row.stage, 1e9):
-        flags.append(f"stuck in {row.stage} for {row.days_in_stage} days")
+        flags.append(f"stuck in {row.stage} for {plural(row.days_in_stage, 'day')}")
     if row.rep_probability_pct - row.win_probability_pct >= 25:
         flags.append("rep far more optimistic than model")
     return "; ".join(flags)
@@ -154,7 +226,16 @@ def main():
           f"log loss {rep_results['log_loss']:.4f}")
     print(f"  Average predicted win chance: model {np.average(p, weights=w):.0%}, "
           f"reps {np.average(rep_p, weights=w):.0%}, actual {np.average(test['label'], weights=w):.0%}")
-    print_calibration(test["label"], p, w, noun="deals")
+    print_calibration(test["label"], p, w, noun="deals", bins=(0, 0.1, 0.2, 0.3, 0.45, 0.7, 0.9, 1.0))
+    # The top band on its own: when the model is (almost) sure, is it right?
+    top = p >= 0.9
+    top_won = np.average(test["label"][top], weights=w[top]) if top.any() else float("nan")
+    top_pred = np.average(p[top], weights=w[top]) if top.any() else float("nan")
+    top_ids = test.deal_id[top].unique()
+    won_ids = test.loc[top & (test["label"] == 1).to_numpy(), "deal_id"].nunique()
+    print(f"  Scored 90%+ on at least one day: {len(top_ids)} deals, {won_ids} of them won "
+          f"({won_ids / max(len(top_ids), 1):.0%}); {int(top.sum()):,} deal-days at 90%+, "
+          f"average score {top_pred:.0%}, won (each deal weighted once) {top_won:.0%}")
     print("\n  The reps' probabilities, same test:")
     print_calibration(test["label"], rep_p.to_numpy(), w, noun="deals",
                       bins=(0, 0.15, 0.3, 0.5, 0.7, 1.0))
@@ -176,6 +257,10 @@ def main():
     today["win_probability_pct"] = (predict(final, today, FEATURES) * 100).round(1)
     today["rep_probability_pct"] = today["probability_pct"]
     today["risk_flags"] = [risk_flags(r, stuck_after) for r in today.itertuples()]
+    # Reasons come from the logistic model (a separate one if boosting was chosen)
+    explainer = (final if chosen == "logistic regression"
+                 else fit(logistic_model(CATEGORICAL, NUMERIC), all_known, FEATURES, "weight"))
+    today["top_reasons"] = [json.dumps(r) for r in top_reasons(explainer, all_known, today)]
     names = con.execute("""
         SELECT d.deal_id, d.deal_name, a.account_name, r.name AS owner_name
         FROM clean.deals d JOIN clean.accounts a USING (account_id)
@@ -183,7 +268,7 @@ def main():
     scores = today.merge(names, on="deal_id")[[
         "deal_id", "deal_name", "account_name", "owner_rep_id", "owner_name", "deal_type",
         "stage", "amount_usd", "expected_close_date", "rep_probability_pct",
-        "win_probability_pct", "risk_flags"]]
+        "win_probability_pct", "risk_flags", "top_reasons"]]
     scores["expected_close_date"] = scores["expected_close_date"].dt.date
     scores = scores.sort_values("win_probability_pct", ascending=False).reset_index(drop=True)
     scores.insert(0, "as_of_date", data_through)
@@ -195,7 +280,8 @@ def main():
         "chosen_model": chosen, "auc": results[chosen]["auc"],
         "log_loss": results[chosen]["log_loss"], "brier": results[chosen]["brier"],
         "rep_auc": rep_results["auc"], "rep_log_loss": rep_results["log_loss"],
-        "rep_brier": rep_results["brier"]})
+        "rep_brier": rep_results["brier"],
+        "p90_plus_deals": len(top_ids), "p90_plus_deals_won": won_ids, "p90_plus_predicted": top_pred, "p90_plus_won": top_won})
 
     amount = scores["amount_usd"].fillna(0)
     print(f"\nScored {len(scores)} open deals as of {data_through}. Pipeline ${amount.sum():,.0f}:")

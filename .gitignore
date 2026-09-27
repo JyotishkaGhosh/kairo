@@ -11,5 +11,8 @@ __pycache__/
 .env
 *.env
 
+# Test output of `python deal_briefings.py --fake`
+data/briefings/*.fake.json
+
 # Temporary files written while saving Parquet
 *.parquet.tmp

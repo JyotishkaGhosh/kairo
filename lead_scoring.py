@@ -32,7 +32,7 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 from load import DB_PATH, ROOT
-from ml_utils import (MODEL_KINDS, compare_models, fit, logistic_model, predict,
+from ml_utils import (MODEL_KINDS, compare_models, fit, logistic_model, plural, predict,
                       print_calibration, save_metrics, save_table)
 
 BACKTEST_DAYS = 120   # the backtest pretends the model was built this many days ago
@@ -75,13 +75,13 @@ def reason_text(group, row):
     if group == "job_title":
         return "contact's job title unknown" if row.job_title_missing else "contact's job title known"
     if group == "age":
-        return f"lead is {row.days_since_created} days old"
+        return f"lead is {plural(row.days_since_created, 'day')} old"
     if group == "rep_effort":
-        return f"{row.touches_total} rep touches"
+        return plural(row.touches_total, 'rep touch', 'rep touches')
     if row.buyer_responses_total == 0:
         return "no buyer response yet"
-    return (f"{row.buyer_responses_total} buyer responses, "
-            f"last {int(row.days_since_buyer_response)} days ago")
+    return (f"{plural(row.buyer_responses_total, 'buyer response')}, "
+            f"last {plural(row.days_since_buyer_response, 'day')} ago")
 
 
 def add_features(df):

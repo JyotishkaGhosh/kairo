@@ -3,9 +3,10 @@
 An AI-powered CRM and sales-intelligence project, built on a realistic
 simulated B2B SaaS sales pipeline that grows by one day, every day.
 
-**Status:** Milestone 6 of 8 — data simulator, DuckDB pipeline, lead scoring,
-win probability, a backtested revenue forecast, customer segmentation,
-next-best-action recommendations and LLM-written deal briefings.
+**Status:** all 8 milestones built — data simulator, DuckDB pipeline, lead
+scoring, win probability, a backtested revenue forecast, customer
+segmentation, next-best-action recommendations, LLM-written deal briefings,
+a static website and a daily automated refresh.
 
 ## What's here so far
 
@@ -35,7 +36,8 @@ and the predicted percentages matched real conversion rates closely.
 
 `win_probability.py` gives every open deal a model win probability next to
 the rep's own guess, plus risk flags (overdue close date, buyer gone quiet,
-stuck in stage). In the backtest the reps' probabilities were too
+stuck in stage). The rep's guess is not a model input - it is only shown for
+comparison ("rep says 80%, model says 49%"). In the backtest the reps' probabilities were too
 optimistic (deals they rated 84% on average were won 65% of the time); the
 model's predictions matched reality within a few points.
 
@@ -54,19 +56,34 @@ data known on that day:
 
 `next_best_action.py` turns all of this into a to-do list: one recommended
 action per lead, deal and customer ("Call today – the buyer is responding",
-"Re-engage the buyer", "Push to close this month", "Pitch an expansion",
-"Close as lost"), each with the reason and the dollars at stake, ranked per
+"Re-engage the buyer", "Agree a close plan with the buyer", "Push to close
+this month", "Qualify the opportunity", "Pitch an expansion", "Close as
+lost"), each with the reason and the dollars at stake, ranked per
 rep. The rules are transparent and built on the model outputs; they rank
 where attention is worth the most, rather than claiming to predict the
 effect of an action.
 
-`deal_briefings.py` asks Claude (Anthropic API) to turn the facts about each of
-the 20 most important deals into a short briefing: headline, situation, risks
-and next steps. Claude only rewrites facts the pipeline computed (it is told
-never to invent anything) and returns structured JSON. Briefings are only
-regenerated when something material about a deal changes, which keeps API
-costs low. The API key comes from an environment variable / GitHub Secret and
-is never stored in the repository.
+`deal_briefings.py` asks Google Gemini (a free-tier Flash-Lite model, picked
+automatically from the models the API key can use, with a fallback model) to
+write a three-sentence briefing for each of the 20 most important deals:
+**situation** (stage, amount, the model's win probability), **why** (the win
+model's top two reasons for this deal plus up to two risk signals) and
+**action** (the recommended next step). Gemini only uses numbers the pipeline
+computed (it is told never to invent anything) and returns structured JSON. Briefings are only regenerated when something material
+about a deal changes. When Gemini is busy, the script retries, switches to the
+fallback model, stops after 5 minutes at most and keeps each deal's previous
+briefing, so a busy AI service can never break the daily refresh. The API key comes from an environment variable / GitHub
+Secret and is never stored in the repository.
+
+`export.py` gathers the results into one small `site/data.json`, and the
+static website in `site/` (plain HTML, CSS and JavaScript with hand-built
+SVG charts, light and dark mode, works on phones) displays it. It is hosted
+on Vercel, which republishes the site whenever the repository changes.
+
+Every morning at 06:00 IST a GitHub Actions workflow
+(`.github/workflows/daily.yml`) advances the simulated CRM by one day, runs
+the whole pipeline (`run_pipeline.py`), commits the new data and pushes it —
+which updates the website. If any data check fails, nothing is published.
 
 ## Run it (Windows PowerShell)
 
@@ -74,6 +91,9 @@ is never stored in the repository.
 cd C:\projects\kairo
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+python run_pipeline.py      # everything below, in order (about 1 minute)
+
+# or step by step:
 python generate.py          # 1st run: ~18 months of history. Later runs: +1 day.
 python load.py              # Parquet -> data/kairo.duckdb (schema raw)
 python transform.py         # cleaning + snapshots (schemas clean, analytics) + checks
@@ -82,7 +102,12 @@ python win_probability.py   # backtest + win probability for today's open deals
 python revenue_forecast.py  # walk-forward backtest + 30/90-day revenue forecast
 python segmentation.py      # customer segments
 python next_best_action.py  # ranked to-do list per rep
-python deal_briefings.py    # LLM briefings (needs $env:ANTHROPIC_API_KEY; --dry-run works without)
+python deal_briefings.py    # Gemini briefings (needs $env:GEMINI_API_KEY; --fake / --dry-run work without)
+python deal_briefings.py --list-models   # which Gemini models your key can use, and which are chosen
+python export.py            # results -> site/data.json
+
+# preview the website at http://localhost:8000
+python -m http.server 8000 --directory site
 python generate.py --reset  # throw away generated data and rebuild
 ```
 
@@ -97,5 +122,5 @@ Output goes to `data/raw/*.parquet` (the CRM tables) and `data/sim_state/`
 4. Win probability + backtested revenue forecast ✅
 5. Customer segmentation + next-best-action ✅
 6. LLM-written deal briefings ✅
-7. Static website (Vercel)
-8. Daily automated refresh with GitHub Actions
+7. Static website (Vercel) ✅
+8. Daily automated refresh with GitHub Actions ✅

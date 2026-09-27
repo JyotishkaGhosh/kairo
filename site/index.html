@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kairo — AI sales intelligence</title>
+  <meta name="description" content="Kairo: lead scoring, win probability, a backtested revenue forecast, customer segments, next-best actions and AI deal briefings on a simulated B2B SaaS CRM that advances one day at a time.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cpath d='M9 23V9m0 8 9-8m-6 6 8 8' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="#top" aria-label="Kairo home">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span class="brand-name">Kairo</span>
+      </a>
+      <nav class="site-nav" aria-label="Sections">
+        <a href="#forecast">Forecast</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#deals">Deals</a>
+        <a href="#leads">Leads</a>
+        <a href="#customers">Customers</a>
+        <a href="#methods">How it works</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button>
+    </div>
+  </header>
+
+  <main class="wrap" id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">AI sales intelligence · <span id="as-of">loading…</span></p>
+      <h1 id="page-title">What will we sell, which deals need attention, and why?</h1>
+      <p class="lede">Kairo runs machine-learning models over a CRM every day: it scores leads,
+        estimates each deal's real chance of winning, forecasts revenue and checks that forecast
+        against history, groups customers, recommends the next best action and writes short
+        AI briefings for the most important deals.</p>
+      <p class="note" role="note"><strong>Simulated data.</strong> The CRM is a realistic simulation of a
+        B2B software company. Every company, person and deal is made up.</p>
+    </section>
+
+    <div id="load-error" class="load-error" hidden></div>
+
+    <section aria-labelledby="overview-title">
+      <h2 id="overview-title" class="visually-hidden">Overview</h2>
+      <div class="hero" id="hero"></div>
+      <div class="tiles" id="tiles"></div>
+    </section>
+
+    <section id="forecast" aria-labelledby="forecast-title">
+      <h2 id="forecast-title">Revenue forecast, tested against history</h2>
+      <p class="section-lede">Every two weeks in the past, the forecast was rebuilt using <em>only</em>
+        the data available on that day, then compared with the revenue that actually closed.
+        The usual CRM approach — multiplying each deal by the rep's own probability — is shown for comparison.</p>
+      <div class="legend" id="forecast-legend"></div>
+      <div class="grid-2" id="forecast-charts"></div>
+      <div class="card" id="forecast-accuracy"></div>
+    </section>
+
+    <section id="pipeline" aria-labelledby="pipeline-title">
+      <h2 id="pipeline-title">Open pipeline</h2>
+      <p class="section-lede">Reps are optimistic. Weighting each open deal by the model's win probability
+        instead of the rep's estimate gives a very different picture, stage by stage.</p>
+      <div class="grid-2">
+        <div class="card" id="stage-chart"></div>
+        <div class="card" id="bookings-chart"></div>
+      </div>
+    </section>
+
+    <section id="deals" aria-labelledby="deals-title">
+      <h2 id="deals-title">Deals that need attention</h2>
+      <p class="section-lede">The open deals where attention is worth the most, ranked by dollars at stake
+        × urgency. Open a deal to see the AI briefing, the risks and the recommended next step.</p>
+      <div class="deal-list" id="deal-list"></div>
+    </section>
+
+    <section id="leads" aria-labelledby="leads-title">
+      <h2 id="leads-title">Hottest leads</h2>
+      <p class="section-lede">Each open lead gets a score from 0 to 100: its estimated chance of becoming
+        a deal, with the reasons behind it.</p>
+      <div class="grid-2">
+        <div class="card" id="lead-list"></div>
+        <div class="card" id="drivers-chart"></div>
+      </div>
+    </section>
+
+    <section id="customers" aria-labelledby="customers-title">
+      <h2 id="customers-title">Customer segments</h2>
+      <p class="section-lede">Customers grouped by K-means clustering on what they've bought, how recently,
+        how engaged they are and whether they have an open deal.</p>
+      <div class="segments" id="segments"></div>
+    </section>
+
+    <section id="actions" aria-labelledby="actions-title">
+      <h2 id="actions-title">Next best actions</h2>
+      <p class="section-lede">One recommended action for every open lead, open deal and customer. Revenue
+        actions are ranked by value at stake; hygiene actions keep the CRM (and the forecast) honest.</p>
+      <div class="grid-2">
+        <div class="card" id="action-summary"></div>
+        <div class="card" id="action-top"></div>
+      </div>
+    </section>
+
+    <section id="methods" aria-labelledby="methods-title">
+      <h2 id="methods-title">How it works</h2>
+      <div class="grid-3" id="model-cards"></div>
+      <div class="grid-2">
+        <div class="card prose">
+          <h3>The daily pipeline</h3>
+          <ol>
+            <li><strong>Simulate</strong> — the CRM advances by one day: new leads, calls, emails,
+              meetings, deals moving (and slipping).</li>
+            <li><strong>Load &amp; clean</strong> — into DuckDB; duplicate contacts merged, gaps labelled.</li>
+            <li><strong>Snapshot</strong> — every open deal and lead as it looked on each past day, so
+              models only ever learn from what was known at the time.</li>
+            <li><strong>Model</strong> — lead scoring, win probability, revenue forecast (scikit-learn),
+              customer segments, next best actions.</li>
+            <li><strong>Brief</strong> — Google Gemini turns each top deal's facts into a short briefing.</li>
+            <li><strong>Publish</strong> — results are exported to one JSON file behind this static page.</li>
+          </ol>
+        </div>
+        <div class="card prose">
+          <h3>Honest limitations</h3>
+          <ul>
+            <li>The data is simulated. Real CRMs are messier in ways a simulator can't fully capture.</li>
+            <li>In the simulation, buyers don't react to reps' actions, so next-best actions rank where
+              attention is worth most; they don't measure how much an action helps.</li>
+            <li>The forecast learned from about 18 months of history. Its earliest backtests had little data
+              to learn from, and its accuracy should improve as history grows.</li>
+            <li>AI briefings only restate facts the pipeline computed; the model is told never to invent anything.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Kairo · a portfolio project · simulated data · <span id="footer-as-of"></span></p>
+      <p>Python · DuckDB · scikit-learn · Google Gemini · static site on Vercel</p>
+    </div>
+  </footer>
+
+  <div class="tooltip" id="tooltip" role="status" aria-live="polite" hidden></div>
+  <script src="app.js" defer></script>
+</body>
+</html>

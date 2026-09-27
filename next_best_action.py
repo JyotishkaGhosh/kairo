@@ -31,20 +31,33 @@ import duckdb
 import pandas as pd
 
 from load import DB_PATH
-from ml_utils import save_table
+from ml_utils import plural, save_table
 
 COMPLETE_AFTER_DAYS = 200  # deals this old have a known outcome (see win_probability.py)
 URGENCY = {  # multiplies the $ value at stake
     "Push to close this month": 1.5,
     "Call today - the buyer is responding": 1.5,
     "Re-engage the buyer": 1.3,
+    "Reset the overdue close date": 1.2,
+    "Agree a close plan with the buyer": 1.2,
     "Unstick the deal": 1.1,
     "Follow up this week": 1.0,
     "Re-qualify the deal": 1.0,
     "Pitch an expansion": 1.0,
+    "Strengthen the deal": 1.0,
+    "Qualify the opportunity": 0.9,
     "Keep momentum": 0.8,
+    "Decide if it is worth pursuing": 0.6,
     "Add to nurture": 0.5,
 }
+EARLY_STAGES = ("Prospecting", "Qualified")
+LOW_WIN_PCT = 10          # below this model win probability a deal needs a go / no-go decision
+BUYER_SILENT_DAYS = 21    # same threshold as the "no buyer response" risk flag
+REP_QUIET_DAYS = 14       # the rep hasn't logged any activity for this long
+REP_OPTIMISM_GAP = 25     # same as the risk flag in win_probability.py
+PUSH_TO_CLOSE_P30 = 0.6   # "push to close" only if the deal is likely (60%+) to be won within 30 days
+ON_TRACK_MIN_WIN_PCT = 50  # "on track" needs at least this model win probability ...
+ON_TRACK_MAX_GAP = 15      # ... and the rep no more than this many points above the model
 
 
 def history(con):
@@ -108,9 +121,12 @@ def deal_actions(con):
     deals = con.execute("""
         SELECT s.deal_id, d.account_id, s.account_name, s.deal_name, s.owner_rep_id, s.stage,
                s.win_probability_pct, s.rep_probability_pct, s.risk_flags,
-               f90.expected_amount, f30.p_won AS p_won_30d,
+               f90.expected_amount,
+               -- two separate models: winning within 30 days can't be likelier than winning at all
+               least(f30.p_won, s.win_probability_pct / 100) AS p_won_30d,
                coalesce(snap.days_since_buyer_response, snap.days_since_created) AS days_since_response,
-               snap.is_close_date_past
+               coalesce(snap.days_since_last_activity, snap.days_since_created) AS days_since_activity,
+               snap.is_close_date_past, snap.close_date_pushes
         FROM analytics.deal_scores s
         JOIN clean.deals d USING (deal_id)
         JOIN analytics.deal_close_forecast f90 ON f90.deal_id = s.deal_id AND f90.horizon_days = 90
@@ -122,35 +138,57 @@ def deal_actions(con):
     for r in deals.itertuples():
         p = r.win_probability_pct / 100
         value = p * r.expected_amount  # expected revenue from this deal
-        facts = f"{r.stage}, model {r.win_probability_pct:.0f}% vs rep {r.rep_probability_pct}%"
+        rep_vs_model = f"rep says {r.rep_probability_pct}%, model says {r.win_probability_pct:.0f}%"
+        gap = r.rep_probability_pct - r.win_probability_pct
         category = "revenue"
-        # First matching rule wins
+        stuck = next((f for f in r.risk_flags.split("; ") if f.startswith("stuck in")), None)
+        # First matching rule wins. Problems that block the deal come before "push to close":
+        # a deal that is closing soon but keeps slipping needs a close plan, not more pushing.
         if r.days_since_response >= 90 or r.win_probability_pct < 2:
             action, category = "Close as lost (clean up pipeline)", "hygiene"
-            reason = (f"buyer silent for {r.days_since_response} days, model {r.win_probability_pct:.1f}%; "
+            reason = (f"buyer silent for {plural(r.days_since_response, 'day')}, model {r.win_probability_pct:.1f}%; "
                       f"${r.expected_amount:,.0f} is inflating the pipeline")
             value = 0.0
-        elif r.p_won_30d >= 0.4:
-            action = "Push to close this month"
-            reason = f"{r.p_won_30d:.0%} chance to be won within 30 days; {facts}"
-        elif r.days_since_response >= 21:
+        elif r.days_since_response >= BUYER_SILENT_DAYS:
             action = "Re-engage the buyer"
-            reason = f"no buyer response for {r.days_since_response} days; {facts}"
-        elif "stuck in" in r.risk_flags:
-            action = "Unstick the deal"
-            stuck = next(f for f in r.risk_flags.split("; ") if f.startswith("stuck in"))
-            reason = f"{stuck}; agree a concrete next step or bring in a senior sponsor; {facts}"
-        elif r.rep_probability_pct - r.win_probability_pct >= 25:
+            reason = f"no buyer response for {plural(r.days_since_response, 'day')}"
+        elif r.is_close_date_past:
+            action = "Reset the overdue close date"
+            reason = "the expected close date has passed; agree a realistic new date with the buyer"
+        elif r.close_date_pushes >= 2:
+            action = "Agree a close plan with the buyer"
+            reason = (f"close date moved {plural(r.close_date_pushes, 'time')}; "
+                      "agree the remaining steps and dates in writing")
+        elif gap >= REP_OPTIMISM_GAP:
             action = "Re-qualify the deal"
-            reason = f"rep is far more optimistic than the model; check budget, decision maker and timeline; {facts}"
-        else:
+            reason = "rep is far more optimistic than the model; check budget, decision maker and timeline"
+        elif r.p_won_30d >= PUSH_TO_CLOSE_P30:
+            action = "Push to close this month"
+            reason = f"{r.p_won_30d:.0%} chance to be won within 30 days"
+        elif stuck:
+            action = "Unstick the deal"
+            reason = f"{stuck}; agree a concrete next step or bring in a senior sponsor"
+        elif r.days_since_activity >= REP_QUIET_DAYS:
+            action = "Follow up this week"
+            reason = f"no activity logged for {plural(r.days_since_activity, 'day')}"
+        elif r.win_probability_pct < LOW_WIN_PCT:
+            action = "Decide if it is worth pursuing"
+            reason = f"only {r.win_probability_pct:.0f}% model win probability; qualify it out or find a sponsor"
+        elif r.stage in EARLY_STAGES:
+            action = "Qualify the opportunity"
+            reason = "early stage; confirm budget, decision maker and timeline to move it forward"
+        elif r.win_probability_pct >= ON_TRACK_MIN_WIN_PCT and gap < ON_TRACK_MAX_GAP:
             action = "Keep momentum"
-            reason = f"on track; book the next meeting; {facts}"
-        if r.is_close_date_past and category == "revenue":
-            reason += "; also update the overdue close date"
+            reason = "on track; book the next meeting"
+        else:  # no single problem, but not safe enough to call "on track"
+            action = "Strengthen the deal"
+            reason = (f"rep is {gap:.0f} points above the model; " if gap >= ON_TRACK_MAX_GAP else
+                      f"only {r.win_probability_pct:.0f}% model win probability; ")
+            reason += "confirm the champion, budget and decision process"
         rows.append({"object_type": "deal", "object_id": r.deal_id, "account_id": r.account_id,
                      "account_name": r.account_name, "owner_rep_id": r.owner_rep_id,
-                     "action": action, "category": category, "reason": reason, "value_usd": value})
+                     "action": action, "category": category, "reason": reason,
+                     "rep_vs_model": rep_vs_model, "value_usd": value})
     return rows
 
 

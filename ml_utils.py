@@ -97,6 +97,12 @@ def print_calibration(y, p, w=None, noun="rows", bins=(0, 0.1, 0.2, 0.3, 0.45, 1
               f"predicted {np.average(g.p, weights=g.w):>4.0%}   actual {np.average(g.y, weights=g.w):>4.0%}")
 
 
+def plural(n, word, many=None):
+    """'1 meeting', '3 meetings' (many = irregular plural, e.g. 'activities')."""
+    n = int(n)
+    return f"{n} {word if n == 1 else many or word + 's'}"
+
+
 def save_table(con, name, df):
     """Write a DataFrame to DuckDB (text columns passed as plain Python objects)."""
     df = df.astype({c: object for c in df.select_dtypes(["str", "string"]).columns})

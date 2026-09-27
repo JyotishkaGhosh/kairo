@@ -3,4 +3,4 @@ numpy>=2.4
 duckdb>=1.5
 faker>=40.0
 scikit-learn>=1.9
-anthropic>=1.8
+google-genai>=2.25

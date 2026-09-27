@@ -1,0 +1,73 @@
+# Milestone 8: run the whole Kairo pipeline every day and publish the results.
+#
+# 06:00 IST = 00:30 UTC. GitHub may start scheduled runs a little late when
+# it is busy. You can also start a run by hand: Actions tab -> "Daily
+# pipeline" -> "Run workflow".
+#
+# The data commit is made under the repository owner's own name and GitHub
+# "noreply" email (so it counts as yours, without publishing your real email),
+# with no bot or co-author lines. Pushing it makes Vercel redeploy the site.
+
+name: Daily pipeline
+
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to push the daily data commit
+
+concurrency:
+  group: daily-pipeline
+  cancel-in-progress: false   # never interrupt a run half-way; queue the next one
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: Asia/Kolkata   # "today" means today in India, so each run simulates the current IST day
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}   # repository secret; briefings are skipped if unset
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}          # optional repository variables; if unset,
+      GEMINI_FALLBACK_MODEL: ${{ vars.GEMINI_FALLBACK_MODEL }}  # the models are chosen automatically
+      # Commit identity: the repository owner. Override with repository
+      # variables GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL if you prefer.
+      GIT_NAME: ${{ vars.GIT_AUTHOR_NAME || github.repository_owner }}
+      GIT_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL || format('{0}+{1}@users.noreply.github.com', github.repository_owner_id, github.repository_owner) }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the pipeline
+        run: python run_pipeline.py
+
+      - name: Commit and push the new data
+        run: |
+          git config user.name "$GIT_NAME"
+          git config user.email "$GIT_EMAIL"
+          git add data/raw data/sim_state data/briefings site/data.json
+          if git diff --cached --quiet; then
+            echo "Nothing changed - no commit needed."
+            exit 0
+          fi
+          DATA_DATE=$(python -c "import json; print(json.load(open('data/raw/export_info.json'))['data_through'])")
+          git commit -m "Daily data refresh: ${DATA_DATE}"
+          # If you pushed something meanwhile, put this commit on top and try again
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+          done
+          echo "Push failed after 3 attempts."
+          exit 1
