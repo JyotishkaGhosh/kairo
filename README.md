@@ -3,7 +3,7 @@
 **AI-powered CRM and sales intelligence**, built on a realistic simulated
 B2B SaaS sales pipeline that grows by one day, every day.
 
-**Live site:** _add your Vercel URL here_
+**Live site:** https://kairo-five-nu.vercel.app/
 
 **Author:** Jyotishka Ghosh
 
@@ -250,4 +250,6 @@ site/                     the website: index.html, styles.css, app.js, data.json
 
 ## Author
 
-Built by **Jyotishka Ghosh**.
+Made by **Jyotishka Ghosh**.
+
+© 2026 Jyotishka Ghosh. All rights reserved.
