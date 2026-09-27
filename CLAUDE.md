@@ -15,8 +15,9 @@ contributor on GitHub. Read-only git commands (`git status`, `git diff`,
 
 The one exception is `.github/workflows/daily.yml` (Milestone 8): on GitHub,
 it commits the daily data refresh **under the owner's own identity**
-(repository owner name + GitHub noreply email, overridable with repo
-variables GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL). Never a bot or Claude
+("Jyotishka Ghosh" + 146670331+JyotishkaGhosh@users.noreply.github.com,
+the same identity as GitHub Desktop; overridable with repo variables
+GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL). Never a bot or Claude
 identity, and never a `Co-Authored-By` line in that workflow's commit
 message - the owner must stay the only contributor.
 

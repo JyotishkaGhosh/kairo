@@ -4,9 +4,9 @@
 # it is busy. You can also start a run by hand: Actions tab -> "Daily
 # pipeline" -> "Run workflow".
 #
-# The data commit is made under the repository owner's own name and GitHub
-# "noreply" email (so it counts as yours, without publishing your real email),
-# with no bot or co-author lines. Pushing it makes Vercel redeploy the site.
+# The data commit is made as "Jyotishka Ghosh" with the GitHub "noreply" email
+# (so it counts as yours, without publishing your real email) - both as
+# author and committer, with no bot or co-author lines. Pushing it makes Vercel redeploy the site.
 
 name: Daily pipeline
 
@@ -31,10 +31,11 @@ jobs:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}   # repository secret; briefings are skipped if unset
       GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}          # optional repository variables; if unset,
       GEMINI_FALLBACK_MODEL: ${{ vars.GEMINI_FALLBACK_MODEL }}  # the models are chosen automatically
-      # Commit identity: the repository owner. Override with repository
-      # variables GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL if you prefer.
-      GIT_NAME: ${{ vars.GIT_AUTHOR_NAME || github.repository_owner }}
-      GIT_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL || format('{0}+{1}@users.noreply.github.com', github.repository_owner_id, github.repository_owner) }}
+      # Commit identity: the owner, exactly as in GitHub Desktop (name + GitHub
+      # noreply email of account JyotishkaGhosh, id 146670331). Never a bot.
+      # Override with repository variables GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL.
+      GIT_NAME: ${{ vars.GIT_AUTHOR_NAME || 'Jyotishka Ghosh' }}
+      GIT_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL || '146670331+JyotishkaGhosh@users.noreply.github.com' }}
 
     steps:
       - name: Check out the repository
