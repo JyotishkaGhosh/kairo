@@ -353,7 +353,6 @@
     const f90 = d.forecast.today.find((f) => f.horizon_days === 90);
     const f30 = d.forecast.today.find((f) => f.horizon_days === 30);
     $("as-of").textContent = `data as of ${fmtDate(d.meta.as_of)}`;
-    $("footer-as-of").textContent = `data as of ${fmtDate(d.meta.as_of)}`;
     $("hero").append(
       el("p", { class: "hero-label", text: `Forecast revenue won in the next 90 days (to ${fmtDate(f90.window_end)})` }),
       el("div", { class: "hero-value", text: money(f90.forecast_usd) }),
