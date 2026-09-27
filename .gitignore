@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# DuckDB database files (rebuilt from data/raw by load.py)
+*.duckdb
+*.duckdb.wal
+
+# Secrets - API keys live in environment variables / GitHub Secrets, never in files
+.env
+*.env
+
+# Temporary files written while saving Parquet
+*.parquet.tmp

@@ -1,0 +1,15 @@
+{
+  "seed": 42,
+  "history_start": "2025-03-28",
+  "current_date": "2026-09-27",
+  "next_id": {
+    "sales_reps": 30,
+    "accounts": 4165,
+    "contacts": 5606,
+    "leads": 5086,
+    "deals": 1319,
+    "deal_stage_history": 6314,
+    "activities": 56221
+  },
+  "pending_hires": []
+}
