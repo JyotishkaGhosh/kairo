@@ -8,22 +8,9 @@
     "situation": "This deal is in Proposal for $293,100, and the model's win probability is 47%.",
     "why": "Being in the Proposal stage raises the win probability and the owner having won 28 of 65 closed deals raises it.",
     "action": "Strengthen the deal by confirming the champion, budget and decision process.",
-    "rep_vs_model": "rep says 65%, model says 47%",
+    "rep_vs_model": "rep says 65%, model says 46%",
     "input_tokens": 1113,
     "output_tokens": 89
-  },
-  {
-    "deal_id": 1234,
-    "deal_name": "Anderson, Wall and Keller - Enterprise",
-    "generated_on": "2026-11-06",
-    "model": "gemini-3.5-flash-lite",
-    "material_key": "68f0f1719eb0fcc1",
-    "situation": "This deal is in Proposal for $206,900, and the model's win probability is 68%.",
-    "why": "Being in the Proposal stage raises the win probability and having 5 buyer responses in the last 30 days (last one 1 day ago), 2 meetings held raises it too.",
-    "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 70%, model says 68%",
-    "input_tokens": 1109,
-    "output_tokens": 97
   },
   {
     "deal_id": 1277,
@@ -34,22 +21,22 @@
     "situation": "This deal is in Proposal for $114,900, and the model's win probability is 81%.",
     "why": "7 buyer responses in the last 30 days (last one 1 day ago), 2 meetings held raises the win probability and being in the Proposal stage raises it, but the close date has passed.",
     "action": "Reset the overdue close date: the expected close date has passed; agree a realistic new date with the buyer.",
-    "rep_vs_model": "rep says 65%, model says 81%",
+    "rep_vs_model": "rep says 65%, model says 80%",
     "input_tokens": 1121,
     "output_tokens": 106
   },
   {
-    "deal_id": 1398,
-    "deal_name": "Grimes-Hill - Enterprise",
+    "deal_id": 1234,
+    "deal_name": "Anderson, Wall and Keller - Enterprise",
     "generated_on": "2026-11-06",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "68649bfe468a3ef3",
-    "situation": "This deal is in Qualified for $342,700, and the model's win probability is 36%.",
-    "why": "3 buyer responses in the last 30 days (last one 0 days ago), 0 meetings held raises the win probability and open for 15 days, 0 of them in Qualified raises it.",
-    "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
-    "rep_vs_model": "rep says 25%, model says 36%",
-    "input_tokens": 1128,
-    "output_tokens": 104
+    "material_key": "68f0f1719eb0fcc1",
+    "situation": "This deal is in Proposal for $206,900, and the model's win probability is 68%.",
+    "why": "Being in the Proposal stage raises the win probability and having 5 buyer responses in the last 30 days (last one 1 day ago), 2 meetings held raises it too.",
+    "action": "Keep momentum on track; book the next meeting.",
+    "rep_vs_model": "rep says 70%, model says 66%",
+    "input_tokens": 1109,
+    "output_tokens": 97
   },
   {
     "deal_id": 1264,
@@ -60,7 +47,7 @@
     "situation": "This deal is in Demo for $267,700, and the model's win probability is 40%.",
     "why": "9 buyer responses in the last 30 days (last one 3 days ago), 4 meetings held raises the win probability, but 11 activities in the last 30 days (last one 3 days ago) lowers it.",
     "action": "Strengthen the deal: only 40% model win probability; confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 45%, model says 40%",
+    "rep_vs_model": "rep says 45%, model says 39%",
     "input_tokens": 1134,
     "output_tokens": 114
   },
@@ -73,9 +60,22 @@
     "situation": "This deal is in Demo for $240,200, and the model's win probability is 44%.",
     "why": "6 buyer responses in the last 30 days (last one 10 days ago), 3 meetings held raises the win probability, but 10 activities in the last 30 days (last one 3 days ago) lowers it.",
     "action": "Strengthen the deal: only 44% model win probability; confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 50%, model says 44%",
+    "rep_vs_model": "rep says 50%, model says 42%",
     "input_tokens": 1138,
     "output_tokens": 115
+  },
+  {
+    "deal_id": 1398,
+    "deal_name": "Grimes-Hill - Enterprise",
+    "generated_on": "2026-11-07",
+    "model": "gemini-3.5-flash-lite",
+    "material_key": "3a0516fdf9896b88",
+    "situation": "This deal is in Qualified for $342,700, and the model's win probability is 33%.",
+    "why": "3 buyer responses in the last 30 days (last one 1 day ago), 0 meetings held raises the win probability, but close date never moved, expected to close in 118 days lowers it.",
+    "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
+    "rep_vs_model": "rep says 25%, model says 33%",
+    "input_tokens": 1129,
+    "output_tokens": 106
   },
   {
     "deal_id": 1186,
@@ -86,22 +86,22 @@
     "situation": "This deal is in Negotiation for $127,000, and the model's win probability is 93%.",
     "why": "Being in the Negotiation stage raises the win probability and 8 buyer responses in the last 30 days (last one 1 day ago), 7 meetings held raises it.",
     "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 90%, model says 92%",
+    "rep_vs_model": "rep says 90%, model says 91%",
     "input_tokens": 1109,
     "output_tokens": 87
   },
   {
     "deal_id": 1130,
     "deal_name": "Norman, Cox and Levine - Enterprise",
-    "generated_on": "2026-11-06",
+    "generated_on": "2026-11-07",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "fb4cb79701726aea",
-    "situation": "This deal is in Proposal for $177,400, and the model's win probability is 47%.",
-    "why": "Being in the Proposal stage raises the win probability and 5 buyer responses in the last 30 days (last one 1 day ago), 7 meetings held raises it.",
-    "action": "Strengthen the deal by confirming the champion, budget and decision process as the rep is 18 points above the model.",
-    "rep_vs_model": "rep says 65%, model says 47%",
+    "material_key": "4dd0b2ad82780625",
+    "situation": "This deal is in Proposal for $177,400, and the model's win probability is 45%.",
+    "why": "Being in the Proposal stage raises the win probability and 5 buyer responses in the last 30 days (last one 2 days ago), 7 meetings held raises it.",
+    "action": "Strengthen the deal: the rep is 20 points above the model, so confirm the champion, budget and decision process.",
+    "rep_vs_model": "rep says 65%, model says 45%",
     "input_tokens": 1124,
-    "output_tokens": 102
+    "output_tokens": 111
   },
   {
     "deal_id": 1301,
@@ -112,9 +112,22 @@
     "situation": "This deal is in Proposal for $120,800, and the model's win probability is 85%.",
     "why": "Being in the Proposal stage raises the win probability and the company profile of Software industry, Mid-Market company in LATAM raises it.",
     "action": "Keep momentum: on track; book the next meeting.",
-    "rep_vs_model": "rep says 65%, model says 85%",
+    "rep_vs_model": "rep says 65%, model says 82%",
     "input_tokens": 1099,
     "output_tokens": 79
+  },
+  {
+    "deal_id": 1340,
+    "deal_name": "Leonard-Lopez - Enterprise",
+    "generated_on": "2026-11-07",
+    "model": "gemini-3.5-flash-lite",
+    "material_key": "9f16fc80b04347a6",
+    "situation": "This deal is in Proposal for $159,300, and the model's win probability is 48%.",
+    "why": "Being in the Proposal stage raises the win probability and having 5 buyer responses in the last 30 days and 3 meetings held raises it.",
+    "action": "Strengthen the deal: confirm the champion, budget and decision process.",
+    "rep_vs_model": "rep says 60%, model says 48%",
+    "input_tokens": 1118,
+    "output_tokens": 93
   },
   {
     "deal_id": 1327,
@@ -125,7 +138,7 @@
     "situation": "This deal is in Qualified for $210,900, and the model's win probability is 41%.",
     "why": "10 buyer responses in the last 30 days (last one 2 days ago), 1 meeting held raises the win probability, but new business from a outbound lead lowers it.",
     "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
-    "rep_vs_model": "rep says 30%, model says 41%",
+    "rep_vs_model": "rep says 30%, model says 39%",
     "input_tokens": 1122,
     "output_tokens": 99
   },
@@ -138,22 +151,9 @@
     "situation": "This deal is in Qualified for $219,200, and the model's win probability is 29%.",
     "why": "6 buyer responses in the last 30 days (last one 0 days ago), 3 meetings held raises the win probability and the owner has won 26 of 54 closed deals raises it, but the deal is stuck in Qualified for 56 days.",
     "action": "Unstick the deal because it is stuck in Qualified for 56 days: agree a concrete next step or bring in a senior sponsor.",
-    "rep_vs_model": "rep says 35%, model says 29%",
+    "rep_vs_model": "rep says 35%, model says 28%",
     "input_tokens": 1149,
     "output_tokens": 125
-  },
-  {
-    "deal_id": 1340,
-    "deal_name": "Leonard-Lopez - Enterprise",
-    "generated_on": "2026-11-06",
-    "model": "gemini-3.5-flash-lite",
-    "material_key": "6ec047d1d573ef19",
-    "situation": "This deal is in Proposal for $159,300, and the model's win probability is 50%.",
-    "why": "Being in the Proposal stage raises the win probability and having 5 buyer responses in the last 30 days (last one 0 days ago), 3 meetings held raises it.",
-    "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 60%, model says 50%",
-    "input_tokens": 1106,
-    "output_tokens": 97
   },
   {
     "deal_id": 1339,
@@ -164,7 +164,7 @@
     "situation": "This deal is in Qualified for $138,300, and the model's win probability is 49%.",
     "why": "4 buyer responses in the last 30 days (last one 4 days ago), 1 meeting held raises the win probability and Software industry, Mid-Market company in North America raises it.",
     "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
-    "rep_vs_model": "rep says 30%, model says 49%",
+    "rep_vs_model": "rep says 30%, model says 46%",
     "input_tokens": 1124,
     "output_tokens": 102
   },
@@ -177,7 +177,7 @@
     "situation": "This deal is in Negotiation for $101,000, and the model's win probability is 74%.",
     "why": "Being in the Negotiation stage raises the win probability and 9 buyer responses in the last 30 days (last one 0 days ago), 7 meetings held raises it.",
     "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 80%, model says 74%",
+    "rep_vs_model": "rep says 80%, model says 67%",
     "input_tokens": 1106,
     "output_tokens": 87
   },
@@ -190,20 +190,20 @@
     "situation": "This deal is in Prospecting for $259,300, and the model's win probability is 25%.",
     "why": "Being in the Prospecting stage lowers the win probability and the owner has won 26 of 54 closed deals raises it.",
     "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
-    "rep_vs_model": "rep says 25%, model says 25%",
+    "rep_vs_model": "rep says 25%, model says 22%",
     "input_tokens": 1110,
     "output_tokens": 97
   },
   {
     "deal_id": 1330,
     "deal_name": "Frank-King - Enterprise",
-    "generated_on": "2026-11-06",
+    "generated_on": "2026-11-07",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "2bad382cda58c90c",
-    "situation": "This deal is in Demo for $126,800, and the model's win probability is 27%.",
-    "why": "1 buyer response in the last 30 days (last one 23 days ago), 0 meetings held lowers the win probability and Software industry, Enterprise company in LATAM raises it.",
-    "action": "Re-engage the buyer because there was no buyer response for 23 days.",
-    "rep_vs_model": "rep says 45%, model says 27%",
+    "material_key": "bc2418b5f9561311",
+    "situation": "This deal is in Demo for $126,800, and the model's win probability is 25%.",
+    "why": "1 buyer response in the last 30 days (last one 24 days ago), 0 meetings held lowers the win probability and Software industry, Enterprise company in LATAM raises it.",
+    "action": "Re-engage the buyer because there was no buyer response for 24 days.",
+    "rep_vs_model": "rep says 45%, model says 25%",
     "input_tokens": 1121,
     "output_tokens": 97
   },
@@ -216,7 +216,7 @@
     "situation": "This deal is in Proposal for $86,700, and the model's win probability is 61%.",
     "why": "Being in the Proposal stage raises the win probability and having 6 buyer responses in the last 30 days and 3 meetings held raises it.",
     "action": "Keep momentum on track and book the next meeting.",
-    "rep_vs_model": "rep says 65%, model says 61%",
+    "rep_vs_model": "rep says 65%, model says 58%",
     "input_tokens": 1104,
     "output_tokens": 88
   },
@@ -234,6 +234,19 @@
     "output_tokens": 106
   },
   {
+    "deal_id": 1303,
+    "deal_name": "Garrison, Donovan and Steele - Enterprise",
+    "generated_on": "2026-11-07",
+    "model": "gemini-3.5-flash-lite",
+    "material_key": "d24d3d30eba601b5",
+    "situation": "This deal is in Qualified for $186,200, and the model's win probability is 20%.",
+    "why": "4 buyer responses in the last 30 days, last one 2 days ago, and 0 meetings held raises the win probability, but 9 activities in the last 30 days, last one 2 days ago, lowers it.",
+    "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
+    "rep_vs_model": "rep says 30%, model says 20%",
+    "input_tokens": 1135,
+    "output_tokens": 111
+  },
+  {
     "deal_id": 1434,
     "deal_name": "Mayer-Nelson - Enterprise",
     "generated_on": "2026-11-06",
@@ -242,21 +255,8 @@
     "situation": "This deal is in Prospecting, and the model's win probability is 33%.",
     "why": "Being in the Prospecting stage lowers the win probability and the Logistics industry, Mid-Market company in LATAM raises it.",
     "action": "Qualify the opportunity: early stage; confirm budget, decision maker and timeline to move it forward.",
-    "rep_vs_model": "rep says 20%, model says 33%",
+    "rep_vs_model": "rep says 20%, model says 30%",
     "input_tokens": 1105,
     "output_tokens": 78
-  },
-  {
-    "deal_id": 1381,
-    "deal_name": "Roberts, Lopez and Phillips - Enterprise",
-    "generated_on": "2026-11-06",
-    "model": "gemini-3.5-flash-lite",
-    "material_key": "f840d94e147d264d",
-    "situation": "This deal is in Qualified for $102,900, and the model's win probability is 38%.",
-    "why": "Software industry, Mid-Market company in LATAM raises the win probability and 3 buyer responses in the last 30 days (last one 7 days ago), 2 meetings held raises it.",
-    "action": "Qualify the opportunity (early stage; confirm budget, decision maker and timeline to move it forward).",
-    "rep_vs_model": "rep says 30%, model says 38%",
-    "input_tokens": 1127,
-    "output_tokens": 107
   }
 ]
