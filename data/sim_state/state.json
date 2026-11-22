@@ -1,7 +1,7 @@
 {
   "seed": 42,
   "history_start": "2025-03-28",
-  "current_date": "2026-11-21",
+  "current_date": "2026-11-22",
   "next_id": {
     "sales_reps": 30,
     "accounts": 4653,
@@ -9,7 +9,7 @@
     "leads": 5738,
     "deals": 1493,
     "deal_stage_history": 7254,
-    "activities": 63990
+    "activities": 63993
   },
   "pending_hires": [
     {
