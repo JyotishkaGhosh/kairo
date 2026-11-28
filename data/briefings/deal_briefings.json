@@ -8,7 +8,7 @@
     "situation": "This deal is in Negotiation for $227,000, and the model's win probability is 85%.",
     "why": "Being in the Negotiation stage raises the win probability and 7 buyer responses in the last 30 days (last one 2 days ago), 15 meetings held raises it, but the close date has passed.",
     "action": "Reset the overdue close date: the expected close date has passed; agree a realistic new date with the buyer.",
-    "rep_vs_model": "rep says 85%, model says 81%",
+    "rep_vs_model": "rep says 85%, model says 80%",
     "input_tokens": 1118,
     "output_tokens": 107
   },
@@ -34,35 +34,9 @@
     "situation": "This deal is in Proposal for $238,900, and the model's win probability is 72%.",
     "why": "Being in the Proposal stage raises the win probability and 6 buyer responses in the last 30 days, with the last one 1 day ago and 7 meetings held, also raises it.",
     "action": "Keep momentum because the deal is on track; book the next meeting.",
-    "rep_vs_model": "rep says 70%, model says 72%",
+    "rep_vs_model": "rep says 70%, model says 71%",
     "input_tokens": 1109,
     "output_tokens": 95
-  },
-  {
-    "deal_id": 1398,
-    "deal_name": "Grimes-Hill - Enterprise",
-    "generated_on": "2026-11-23",
-    "model": "gemini-3.5-flash-lite",
-    "material_key": "90d79fc75bcc7f73",
-    "situation": "This deal is in Demo for $342,700, and the model's win probability is 44%.",
-    "why": "7 buyer responses in the last 30 days (last one 0 days ago), 3 meetings held raises the win probability, but an enterprise deal worth $342,700 lowers it.",
-    "action": "Strengthen the deal because there is only a 44% model win probability: confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 40%, model says 38%",
-    "input_tokens": 1129,
-    "output_tokens": 110
-  },
-  {
-    "deal_id": 1438,
-    "deal_name": "Moore LLC - Enterprise",
-    "generated_on": "2026-11-26",
-    "model": "gemini-3.5-flash-lite",
-    "material_key": "f3fdade098a6d62d",
-    "situation": "This deal is in Demo for $259,300, and the model's win probability is 64%.",
-    "why": "2 buyer responses in the last 30 days (last one 0 days ago), 0 meetings held raises the win probability and the owner has won 28 of 57 closed deals raises it.",
-    "action": "Keep momentum because it is on track; book the next meeting.",
-    "rep_vs_model": "rep says 50%, model says 58%",
-    "input_tokens": 1118,
-    "output_tokens": 97
   },
   {
     "deal_id": 1186,
@@ -73,7 +47,7 @@
     "situation": "This deal is in Negotiation for $127,000, and the model's win probability is 85%.",
     "why": "Being in the Negotiation stage raises the win probability and having 7 buyer responses in the last 30 days (last one 3 days ago), 8 meetings held raises it, but the deal is stuck in Negotiation for 32 days.",
     "action": "Unstick the deal by agreeing on a concrete next step or bringing in a senior sponsor, as it has been stuck in Negotiation for 32 days.",
-    "rep_vs_model": "rep says 90%, model says 85%",
+    "rep_vs_model": "rep says 90%, model says 84%",
     "input_tokens": 1135,
     "output_tokens": 130
   },
@@ -91,30 +65,43 @@
     "output_tokens": 128
   },
   {
-    "deal_id": 1264,
-    "deal_name": "Chambers-Austin - Enterprise",
-    "generated_on": "2026-11-27",
+    "deal_id": 1438,
+    "deal_name": "Moore LLC - Enterprise",
+    "generated_on": "2026-11-28",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "9bcd6e4f1801dabc",
-    "situation": "This deal is in Demo for $267,700, and the model's win probability is 36%.",
-    "why": "9 buyer responses in the last 30 days (last one 0 days ago), 7 meetings held raises the win probability and being in the Demo stage raises it, but the deal has been stuck in Demo for 37 days.",
-    "action": "Unstick the deal since it has been stuck in Demo for 37 days; agree a concrete next step or bring in a senior sponsor.",
-    "rep_vs_model": "rep says 45%, model says 36%",
-    "input_tokens": 1133,
-    "output_tokens": 119
+    "material_key": "28eddcaefde89283",
+    "situation": "This deal is in Demo for $259,300, and the model's win probability is 56%.",
+    "why": "The owner has won 29 of 58 closed deals raises the win probability and 2 buyer responses in the last 30 days (last one 2 days ago), 0 meetings held raises it.",
+    "action": "Keep momentum: on track; book the next meeting.",
+    "rep_vs_model": "rep says 50%, model says 56%",
+    "input_tokens": 1117,
+    "output_tokens": 97
   },
   {
-    "deal_id": 1303,
-    "deal_name": "Garrison, Donovan and Steele - Enterprise",
-    "generated_on": "2026-11-27",
+    "deal_id": 1398,
+    "deal_name": "Grimes-Hill - Enterprise",
+    "generated_on": "2026-11-28",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "1c10af574501d291",
-    "situation": "This deal is in Demo for $186,200, and the model's win probability is 61%.",
-    "why": "8 buyer responses in the last 30 days (last one 0 days ago), 2 meetings held raises the win probability and being in the Demo stage raises it.",
-    "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 45%, model says 61%",
-    "input_tokens": 1112,
-    "output_tokens": 94
+    "material_key": "1ea00864bcba2c2a",
+    "situation": "This deal is in Demo for $342,700, and the model's win probability is 33%.",
+    "why": "7 buyer responses in the last 30 days (last one 3 days ago), 4 meetings held raises the win probability, but an enterprise deal worth $342,700 lowers it.",
+    "action": "Strengthen the deal because there is only 33% model win probability, so confirm the champion, budget and decision process.",
+    "rep_vs_model": "rep says 40%, model says 33%",
+    "input_tokens": 1129,
+    "output_tokens": 110
+  },
+  {
+    "deal_id": 1264,
+    "deal_name": "Chambers-Austin - Enterprise",
+    "generated_on": "2026-11-28",
+    "model": "gemini-3.5-flash-lite",
+    "material_key": "0352fde14dc7c993",
+    "situation": "This deal is in Demo for $267,700, and the model's win probability is 32%.",
+    "why": "8 buyer responses in the last 30 days (last one 1 day ago), 7 meetings held raises the win probability and being in the Demo stage raises it, but the deal is stuck in Demo for 38 days.",
+    "action": "Unstick the deal by agreeing a concrete next step or bringing in a senior sponsor because it has been stuck in Demo for 38 days.",
+    "rep_vs_model": "rep says 45%, model says 32%",
+    "input_tokens": 1134,
+    "output_tokens": 126
   },
   {
     "deal_id": 1301,
@@ -130,17 +117,17 @@
     "output_tokens": 95
   },
   {
-    "deal_id": 1218,
-    "deal_name": "Phillips, Burns and Weaver - Enterprise",
+    "deal_id": 1303,
+    "deal_name": "Garrison, Donovan and Steele - Enterprise",
     "generated_on": "2026-11-27",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "72d8793de1b89702",
-    "situation": "This deal is in Demo for $219,200, and the model's win probability is 38%.",
-    "why": "The owner has won 29 of 58 closed deals raises the win probability and 3 buyer responses in the last 30 days (last one 0 days ago), 3 meetings held raises it.",
-    "action": "Strengthen the deal: confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 50%, model says 38%",
-    "input_tokens": 1136,
-    "output_tokens": 107
+    "material_key": "1c10af574501d291",
+    "situation": "This deal is in Demo for $186,200, and the model's win probability is 61%.",
+    "why": "8 buyer responses in the last 30 days (last one 0 days ago), 2 meetings held raises the win probability and being in the Demo stage raises it.",
+    "action": "Keep momentum on track; book the next meeting.",
+    "rep_vs_model": "rep says 45%, model says 56%",
+    "input_tokens": 1112,
+    "output_tokens": 94
   },
   {
     "deal_id": 1340,
@@ -151,9 +138,22 @@
     "situation": "This deal is in Negotiation for $138,400, and the model's win probability is 73%.",
     "why": "Being in the Negotiation stage raises the win probability and 7 buyer responses in the last 30 days (last one 2 days ago), 5 meetings held raises it.",
     "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 80%, model says 73%",
+    "rep_vs_model": "rep says 80%, model says 72%",
     "input_tokens": 1106,
     "output_tokens": 87
+  },
+  {
+    "deal_id": 1218,
+    "deal_name": "Phillips, Burns and Weaver - Enterprise",
+    "generated_on": "2026-11-28",
+    "model": "gemini-3.5-flash-lite",
+    "material_key": "b3980e3d47089b86",
+    "situation": "This deal is in Demo for $219,200, and the model's win probability is 36%.",
+    "why": "The owner has won 29 of 58 closed deals raises the win probability and being in the Demo stage raises it.",
+    "action": "Strengthen the deal: only 36% model win probability; confirm the champion, budget and decision process.",
+    "rep_vs_model": "rep says 50%, model says 36%",
+    "input_tokens": 1117,
+    "output_tokens": 98
   },
   {
     "deal_id": 1330,
@@ -164,7 +164,7 @@
     "situation": "This deal is in Proposal for $130,700, and the model's win probability is 84%.",
     "why": "Being in the Proposal stage raises the win probability and 5 buyer responses in the last 30 days (last one 0 days ago), 2 meetings held raises it.",
     "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 65%, model says 77%",
+    "rep_vs_model": "rep says 65%, model says 76%",
     "input_tokens": 1109,
     "output_tokens": 87
   },
@@ -177,7 +177,7 @@
     "situation": "This deal is in Proposal for $206,900, and the model's win probability is 32%.",
     "why": "Being in the Proposal stage raises the win probability, but the close date moved 2 times, expected to close in 24 days, lowers it, and the close date has slipped 2 times, the rep's forecast is 38 points above the model, and it has been stuck in Proposal for 39 days.",
     "action": "Agree a close plan with the buyer: close date moved 2 times; agree the remaining steps and dates in writing.",
-    "rep_vs_model": "rep says 70%, model says 32%",
+    "rep_vs_model": "rep says 70%, model says 30%",
     "input_tokens": 1128,
     "output_tokens": 133
   },
@@ -190,7 +190,7 @@
     "situation": "This deal is in Demo for $142,700, and the model's win probability is 50%.",
     "why": "14 buyer responses in the last 30 days (last one 2 days ago), 5 meetings held raises the win probability, but 25 activities in the last 30 days (last one 2 days ago) lowers it.",
     "action": "Strengthen the deal: only 50% model win probability; confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 40%, model says 50%",
+    "rep_vs_model": "rep says 40%, model says 48%",
     "input_tokens": 1138,
     "output_tokens": 115
   },
@@ -203,7 +203,7 @@
     "situation": "This deal is in Proposal for $98,400, and the model's win probability is 83%.",
     "why": "Being in the Proposal stage raises the win probability and 7 buyer responses in the last 30 days (last one 1 day ago), 4 meetings held raises it.",
     "action": "Keep momentum on track; book the next meeting.",
-    "rep_vs_model": "rep says 65%, model says 83%",
+    "rep_vs_model": "rep says 65%, model says 82%",
     "input_tokens": 1111,
     "output_tokens": 86
   },
@@ -216,7 +216,7 @@
     "situation": "This deal is in Proposal for $232,100, and the model's win probability is 24%.",
     "why": "Being in the Proposal stage raises the win probability and the close date moved 2 times lowers it, but the close date has slipped 2 times and the rep's forecast is 42 points above the model.",
     "action": "Agree a close plan with the buyer: the close date moved 2 times, so agree the remaining steps and dates in writing.",
-    "rep_vs_model": "rep says 65%, model says 24%",
+    "rep_vs_model": "rep says 65%, model says 22%",
     "input_tokens": 1118,
     "output_tokens": 111
   },
@@ -229,7 +229,7 @@
     "situation": "This deal is in Prospecting for $154,400, and the model's win probability is 43%.",
     "why": "Being in the Prospecting stage lowers the win probability and new business from a unknown lead raises it.",
     "action": "Qualify the opportunity early stage; confirm budget, decision maker and timeline to move it forward.",
-    "rep_vs_model": "rep says 20%, model says 43%",
+    "rep_vs_model": "rep says 20%, model says 41%",
     "input_tokens": 1106,
     "output_tokens": 89
   },
@@ -242,21 +242,21 @@
     "situation": "This deal is in Demo for $211,400, and the model's win probability is 32%.",
     "why": "New business from a outbound lead lowers the win probability and Software industry, Mid-Market company in LATAM raises it, but 7 days since the last buyer response is noted.",
     "action": "Strengthen the deal: only 32% model win probability; confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 45%, model says 28%",
+    "rep_vs_model": "rep says 45%, model says 26%",
     "input_tokens": 1111,
     "output_tokens": 100
   },
   {
-    "deal_id": 1277,
-    "deal_name": "Ryan, Adams and Allen - Enterprise",
-    "generated_on": "2026-11-27",
+    "deal_id": 1197,
+    "deal_name": "Howell-Johnson - Growth",
+    "generated_on": "2026-11-28",
     "model": "gemini-3.5-flash-lite",
-    "material_key": "34e6e059c471722b",
-    "situation": "This deal is in Proposal for $114,900, and the model's win probability is 45%.",
-    "why": "Being in the Proposal stage raises the win probability and 5 buyer responses in the last 30 days (last one 9 days ago), 4 meetings held raises it.",
-    "action": "Strengthen the deal: the rep is 20 points above the model, so confirm the champion, budget and decision process.",
-    "rep_vs_model": "rep says 65%, model says 45%",
-    "input_tokens": 1123,
-    "output_tokens": 103
+    "material_key": "145c4937fbe4280d",
+    "situation": "This deal is in Proposal for $45,200, and the model's win probability is 87%.",
+    "why": "12 buyer responses in the last 30 days (last one 1 day ago), 12 meetings held raises the win probability and being in the Proposal stage raises it, but the close date has passed.",
+    "action": "Reset the overdue close date: the expected close date has passed; agree a realistic new date with the buyer.",
+    "rep_vs_model": "rep says 60%, model says 87%",
+    "input_tokens": 1120,
+    "output_tokens": 114
   }
 ]
